@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  primary-db:
+    image: postgres:13
+    container_name: postgres-primary
+    hostname: postgres-primary
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - dbnet
+
+networks:
+  dbnet:
+    driver: bridge
