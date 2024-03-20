@@ -27,7 +27,7 @@ CREATE USER replicauser REPLICATION LOGIN ENCRYPTED PASSWORD 'replicapassword';
 
 Edit the following parameters in your `postgresql.conf`
 ```sh
-wal_level = logical replica?
+wal_level = replica
 wal_log_hints = on
 max_wal_size = 1GB
 hot_standby = on
