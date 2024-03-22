@@ -1,0 +1,2 @@
+ALTER TABLE public.taxi_trips
+ADD COLUMN IF NOT EXISTS car_type VARCHAR;

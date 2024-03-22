@@ -32,3 +32,13 @@ class PostgresDatabase:
         finally:
             conn.commit()
             conn.close()
+
+    def execute(self, sql):
+        with self.cursor() as cur:
+            cur.execute(sql)
+            rowcount = cur.rowcount
+
+        if rowcount:
+            print(f"Executed query. Rowcount: {rowcount}")
+        else:
+            print("Executed query. Rowcount: -1")
