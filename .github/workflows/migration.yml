@@ -1,0 +1,50 @@
+name: Database Migration CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  services:
+    primary-db:
+      image: postgres:13
+      container_name: postgres-primary
+      hostname: postgres-primary
+      environment:
+        POSTGRES_PASSWORD: postgres
+      ports:
+        - "5432:5432"
+      volumes:
+        - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Get version
+      id: get_version
+      run: |
+        cd cicd/migrations/taxishop/
+        version=$(./read_project_version.sh)
+        echo "Current version is $version"
+        echo "::set-output name=version::$version"
+
+    - name: Run migration
+      run: |
+        version="${{ steps.get_version.outputs.version }}"
+        cd cicd/migrations/taxishop/
+        python -m src.db.migration_handler --version $version --dbname taxi
