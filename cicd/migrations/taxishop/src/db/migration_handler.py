@@ -9,11 +9,11 @@ class MigrationOperation(Enum):
     REVERT = "revert"
 
 
-def run(version: str, mode: str, dbname: str):
+def run(version: str, mode: str, dbname: str, host: str):
     migration_file_path = f"src/migrations/{version}/{mode}.sql"
     migration_sql = open(migration_file_path).read()
 
-    db = PostgresDatabase(dbname)
+    db = PostgresDatabase(dbname=dbname, host=host)
     db.execute(migration_sql)
 
 
@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--dbname", type=str)
+    parser.add_argument("--host", type=str, default="localhost")
     parser.add_argument("--version", type=str)
     parser.add_argument("--mode",
                         type=str,
@@ -33,4 +34,4 @@ if __name__ == "__main__":
         print("Provide a version to run the script")
         sys.exit()
 
-    run(args.version, args.mode, args.dbname)
+    run(args.version, args.mode, args.dbname, args.host)

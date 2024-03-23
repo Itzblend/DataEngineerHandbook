@@ -50,4 +50,4 @@ jobs:
       run: |
         version="${{ steps.get_version.outputs.version }}"
         cd cicd/migrations/taxishop/
-        python -m src.db.migration_handler --version $version --dbname taxi
+        python -m src.db.migration_handler --version $version --dbname taxi --host primary-db
