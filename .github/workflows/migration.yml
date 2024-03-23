@@ -6,19 +6,19 @@ on:
 
 jobs:
 
-  services:
-    primary-db:
-      image: postgres:13
-      container_name: postgres-primary
-      hostname: postgres-primary
-      environment:
-        POSTGRES_PASSWORD: postgres
-      ports:
-        - "5432:5432"
-      volumes:
-        - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
   build:
+    services:
+      primary-db:
+        image: postgres:13
+        container_name: postgres-primary
+        hostname: postgres-primary
+        environment:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - "5432:5432"
+        volumes:
+          - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
     runs-on: ubuntu-latest
 
