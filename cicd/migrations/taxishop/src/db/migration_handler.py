@@ -11,13 +11,20 @@ class MigrationOperation(Enum):
 
 def run(version: str, mode: str, dbname: str, host: str, print_only: bool):
     migration_file_path = f"src/migrations/{version}/{mode}.sql"
-    migration_sql = open(migration_file_path).read()
 
+    try:
+        migration_sql = open(migration_file_path).read()
+    except FileNotFoundError:
+        print(f"No migration file for {migration_file_path}")
+        return
+
+    print(f"==== Executing migration for {migration_file_path} ====")
     if print_only:
         print(migration_sql)
     else:
         db = PostgresDatabase(dbname=dbname, host=host)
         db.execute(migration_sql)
+    print(f"==== Finished migration for {migration_file_path} ====")
 
 
 if __name__ == "__main__":

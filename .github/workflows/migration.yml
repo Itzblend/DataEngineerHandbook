@@ -30,10 +30,13 @@ jobs:
         cd cicd/migrations/taxishop/
         version=$(./read_project_version.sh)
         echo "Current version is $version"
-        echo "::set-output name=version::$version"
+        echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
 
-    - name: Run migration
+    - name: Run migrations
       run: |
-        version="${{ steps.get_version.outputs.version }}"
+        diff_tags=$(./get_git_tag_diff.sh $(git describe --tags) $PROJECT_VERSION)
         cd cicd/migrations/taxishop/
-        python -m src.db.migration_handler --version $version --dbname taxi --print-only
+        for tag in $diff_tags; do
+          python -m src.db.migration_handler --version $tag --dbname taxi --print-only
+        done
+
