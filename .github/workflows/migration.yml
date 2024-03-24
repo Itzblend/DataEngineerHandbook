@@ -30,13 +30,21 @@ jobs:
         cd cicd/migrations/taxishop/
         version=$(./read_project_version.sh)
         echo "Current version is $version"
+        echo "Current tag is $(git tag)"
         echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
 
     - name: Run migrations
       run: |
-        diff_tags=$(./get_git_tag_diff.sh $(git describe --tags) $PROJECT_VERSION)
+        current_tag=$(git describe --tags)
+        git tag -f $PROJECT_VERSION
+        diff_tags=$(./get_git_tag_diff.sh $current_tag $PROJECT_VERSION)
+        
         cd cicd/migrations/taxishop/
         for tag in $diff_tags; do
-          python -m src.db.migration_handler --version $tag --dbname taxi --print-only
+          if [[ "$tag" > "$current_tag" ]]; then
+            mode="migrate"
+          else
+            mode="revert"
+          fi
+          python -m src.db.migration_handler --version $tag --mode $mode --dbname taxi --print-only
         done
-
