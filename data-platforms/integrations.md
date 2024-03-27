@@ -13,7 +13,7 @@ Characteristics of a good data platform integration
 
 |Name|Type|Current version|Latest version|Created time|Modified time|
 --- |--- | --- | --- | --- | ---|
-|titanic-test|File(uri_file)|2|1|Feb 25, 2024 2:21 PM|Feb 28, 2024 9:46 AM
+|titanic-test|File(uri_file)|1|2|Feb 25, 2024 2:21 PM|Feb 28, 2024 9:46 AM
 
 
 Above is an example from Azure Machine Learning Studio about what information is available
@@ -64,6 +64,15 @@ df = spark.read.format(file_type).option("inferSchema", "true").load(file_locati
 ```
 
 Would you call this an integration? - Well luckily Databricks doesn't call it that, but many of your AI powered start ups do
+
+Hell, Databricks gives you the option to generate comments for your Delta table with AI before telling you how to read the data.
+Now those familiar with Spark know how to read a Delta table but for those who use Databricks as a Data Analytics Platform, it
+doesn't give you much at all guidance or integrations to work with.
+
+I can understand moving to Databricks if you want a hassle free managed service Spark but even then there must be cheaper options.
+No wonder Databricks has the reputation of a Data Science factory that produces Notebooks for engineers to decipher into functioning
+data pipelines and of course the big cloud invoices where big chunk of it is labeled "Others" - Very cool
+
 
 WIP!
 must address about data abstractions:
