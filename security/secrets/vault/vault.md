@@ -11,10 +11,12 @@ export VAULT_TOKEN='<token>'
 ```
 
 ```sql
-CREATE ROLE vaultuser WITH CREATEROLE PASSWORD 'vaultpass'
+CREATE ROLE vaultuser WITH SUPERUSER CREATEROLE LOGIN PASSWORD 'vaultpass'
 ```
 
 ```sh
+vault secrets enable database
+
 vault write database/config/taxi \
     plugin_name="postgresql-database-plugin" \
     allowed_roles="taxi-reader" \
@@ -27,7 +29,8 @@ vault write database/roles/taxi-reader \
     db_name="taxi" \
     creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
         GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
-    default_ttl="1h" \
+    revocation_statements="REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM \"{{name}}\"; DROP OWNED BY \"{{name}}\"; DROP ROLE \"{{name}}\";" \
+    default_ttl="10m" \
     max_ttl="24h"
 
 vault read database/creds/taxi-reader
