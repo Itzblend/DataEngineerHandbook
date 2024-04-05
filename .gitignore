@@ -5,3 +5,7 @@ venv_
 
 docker/basebackup
 docker/data
+
+vault-keys.json
+
+data/
